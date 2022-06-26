@@ -6,10 +6,10 @@
 </head>
 <body>
     <form id="productAdd", action="./product/regForm", method="post">
-        ID<input id="id" />
-        상품명<input id="name" />
-        가격<input id="price" />
-        <button type="submit" >등록</button>
+        <label for="id">ID</label><input id="id" name="id" /><br>
+        <label for="name">상품명</label><input id="name" name="name" /><br>
+        <label for="price">가격</label><input id="price" name="price" />
+        <button type="submit" form="productAdd" value="Submit" >등록</button>
     </form>
 </body>
 </html>
