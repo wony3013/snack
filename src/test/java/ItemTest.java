@@ -15,7 +15,7 @@ public class ItemTest {
 	public void getProductsTest(){
 		Products 과자리스트 = new Products();
 
-		과자리스트.getItem().stream().forEach(item -> {
+		과자리스트.getItems().stream().forEach(item -> {
 			logger.info(item.getName());
 		});
 
@@ -34,7 +34,7 @@ public class ItemTest {
 
 		과자리스트.addItem("P999", "햇반",1700);
 
-		과자리스트.getItem().stream().forEach(item -> {
+		과자리스트.getItems().stream().forEach(item -> {
 			logger.info(item.getName());
 		});
 

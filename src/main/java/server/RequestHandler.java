@@ -10,9 +10,13 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import app.Products;
+
 public class RequestHandler extends Thread{
 	private static final Logger log =  LoggerFactory.getLogger(RequestHandler.class);
 	private Socket connection;
+
+	static Products products = new Products();
 
 	public RequestHandler(Socket socket){
 		this.connection = socket;
@@ -48,23 +52,19 @@ public class RequestHandler extends Thread{
 			}
 			byte[] body = Files.readAllBytes(new File("./src/webapp/index.html").toPath());
 			if("/product".equals(tokens[1])){
-				log.debug("상품 등록 폼");
 				body = Files.readAllBytes(new File("./src/webapp" + tokens[1]+".html").toPath());
 			} else if ("/product/regForm".equals(tokens[1])) {
-				// TODO 상품 등록 된 후 Return 시켜줄 html 생성하여 이곳 작성
-			}
-			int requestBodyLength;
-			HashMap<String, String> request = null;
-			if(dataLength > 0) {
-				char[] cubf = getCubf(dataLength, br);
-				request = makeRequest(cubf);
-				log.debug("request parameter : {}", request.toString());
+				int requestBodyLength;
+				HashMap<String, String> requestParam = null;
+				if(dataLength > 0) {
+					char[] cubf = getCubf(dataLength, br);
+					requestParam = makeRequestParam(cubf);
+					this.products.addItem(requestParam.get("id"), requestParam.get("name"), Integer.parseInt(requestParam.get("price")));
+				}
 			}
 
 
 			File index = new File("./src/webapp/index.html");
-
-
 
 			DataOutputStream dos = new DataOutputStream(out);
 			response200Header(dos, body.length);
@@ -77,7 +77,7 @@ public class RequestHandler extends Thread{
 
 	}
 
-	public char[] getCubf(int dataLength, BufferedReader br) throws IOException {
+	private char[] getCubf(int dataLength, BufferedReader br) throws IOException {
 		char[] cubf = null;
 		cubf = new char[dataLength];
 		int requestBodyLength = br.read(cubf);
@@ -85,7 +85,7 @@ public class RequestHandler extends Thread{
 	}
 
 
-	public HashMap<String, String> makeRequest(char[] cubf){
+	private HashMap<String, String> makeRequestParam(char[] cubf){
 		HashMap<String, String> request = new HashMap<>();
 		String requestString = new String(cubf);
 		String[] splitedRequestString = requestString.split("&");

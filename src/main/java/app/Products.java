@@ -22,7 +22,7 @@ public class Products {
 		this.itemList.removeIf(item -> item.id.equals(targetId));
 	}
 
-	public List<Item> getItem(){
+	public List<Item> getItems(){
 		return this.itemList;
 	}
 
