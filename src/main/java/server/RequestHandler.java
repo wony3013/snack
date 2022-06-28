@@ -1,11 +1,13 @@
 package server;
 
+import app.http.HttpRequest;
+import app.http.HttpResponse;
+import app.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +32,13 @@ public class RequestHandler extends Thread{
 		try(InputStream in = connection.getInputStream();
 			OutputStream out = connection.getOutputStream()){
 			//TODO 사용자 요청에 대한 처리는 이곳에서 구현하면 된다.
+			HttpRequest httpRequest = new HttpRequest(in);
+			HttpResponse httpResponse = new HttpResponse(out);
+
+
+
+
+
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String line = br.readLine();
 			log.debug("request line : {}", line);
@@ -51,6 +60,7 @@ public class RequestHandler extends Thread{
 				line = br.readLine();
 			}
 			byte[] body = Files.readAllBytes(new File("./src/webapp/index.html").toPath());
+
 			if("/product".equals(tokens[1])){
 				body = Files.readAllBytes(new File("./src/webapp" + tokens[1]+".html").toPath());
 			} else if ("/product/regForm".equals(tokens[1])) {
@@ -61,6 +71,12 @@ public class RequestHandler extends Thread{
 					requestParam = makeRequestParam(cubf);
 					this.products.addItem(requestParam.get("id"), requestParam.get("name"), Integer.parseInt(requestParam.get("price")));
 				}
+			} else if ("/user/login".equals(tokens[1])){
+				/** TODO response add Header "Set-Cookie" "logined=true"
+				request Cookie logined key value
+				Cookie key jsessionid=*/
+			} else if ("/user/create".equals(tokens[1])){
+				String body = IOUtils.getCubf(br, dataLength);
 			}
 
 
@@ -77,12 +93,12 @@ public class RequestHandler extends Thread{
 
 	}
 
-	private char[] getCubf(int dataLength, BufferedReader br) throws IOException {
-		char[] cubf = null;
-		cubf = new char[dataLength];
-		int requestBodyLength = br.read(cubf);
-		return cubf;
-	}
+//	private char[] getCubf(int dataLength, BufferedReader br) throws IOException {
+//		char[] cubf = null;
+//		cubf = new char[dataLength];
+//		int requestBodyLength = br.read(cubf);
+//		return cubf;
+//	}
 
 
 	private HashMap<String, String> makeRequestParam(char[] cubf){
@@ -101,12 +117,25 @@ public class RequestHandler extends Thread{
 			dos.writeBytes("HTTP/1.1 200 OK \r\n");
 			dos.writeBytes("Content-Type: text/html; charset=utf-8 \r\n");
 			dos.writeBytes("Content-Length:"+lengthOfBodyContent+"\r\n");
+			dos.writeBytes("Set-Cookie: logined=true; Path=/");
 			dos.writeBytes("\r\n");
 
 		}catch (IOException e){
 			log.error(e.getMessage());
 		}
+	}
 
+	// Redirect
+	private void response302Header(DataOutputStream dos, int lengthOfBodyContent){
+		try{
+			dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
+			dos.writeBytes("Location:  \r\n");
+			dos.writeBytes("Set-Cookie: logined=true; Path=/");
+			dos.writeBytes("\r\n");
+
+		}catch (IOException e){
+			log.error(e.getMessage());
+		}
 	}
 
 	private void responseBody(DataOutputStream dos, byte[] body){
