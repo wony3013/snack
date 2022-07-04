@@ -7,14 +7,14 @@ import java.util.Map;
 
 public class HttpResponse {
 
-    /*
-    *
-    * */
-
     private DataOutputStream dos = null;
     private Map<String,String> header = new HashMap<>();
 
     public HttpResponse(OutputStream out){
         dos = new DataOutputStream(out);
+    }
+
+    public void addHeader(String key, String value){
+        header.put(key, value);
     }
 }

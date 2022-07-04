@@ -1,4 +1,4 @@
-package app;
+package app.util;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -49,6 +49,22 @@ public class HttpRequestUtils {
     }
 
     public static class Pair {
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
         String key;
         String value;
 
@@ -57,27 +73,12 @@ public class HttpRequestUtils {
             this.value = value;
         }
 
-        public void setKey(String key){
-            this.key = key;
-        }
-
-        public void setValue(String value){
-            this.value = value;
-        }
-
-        public String getKey(){
-            return this.key;
-        }
-
-        public String getValue(){
-            return this.value;
-        }
-        // lobmok 사용!
-
-
         @Override
         public String toString() {
             return "Pair [key=" + key + ", value=" + value + "]";
         }
     }
+
+
+
 }

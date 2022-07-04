@@ -3,6 +3,8 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.util.CsvFileHandler;
+
 public class Products {
 
 	List<Item> itemList = new ArrayList<Item>();

@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.google.common.net.HttpHeaders;
+
 import app.Products;
 
 public class RequestHandler extends Thread{
@@ -35,49 +37,48 @@ public class RequestHandler extends Thread{
 			HttpRequest httpRequest = new HttpRequest(in);
 			HttpResponse httpResponse = new HttpResponse(out);
 
+			String path = httpRequest.getRequestLine().getPath();
+			int dataLength = Integer.parseInt(httpRequest.getHttpHeaders().headers.get("dataLength"));
 
+			// BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			//
+			// if(line == null){
+			// 	return;
+			// }
+			//
+			// String[] tokens = line.split(" ");
+			// StringBuffer response = new StringBuffer();
+			// int dataLength = 0;
 
-
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String line = br.readLine();
-			log.debug("request line : {}", line);
-
-			if(line == null){
-				return;
-			}
-
-			String[] tokens = line.split(" ");
-			StringBuffer response = new StringBuffer();
-			int dataLength = 0;
-
-			while (!"".equals(line)){
-				response.append(line);
-				if(line.contains("Content-Length")){
-					dataLength = Integer.parseInt(line.replaceAll(" ","").split(":")[1]);
-				}
-				log.debug("header : {}", line);
-				line = br.readLine();
-			}
+			// while (!"".equals(line)){
+			// 	response.append(line);
+			// 	if(line.contains("Content-Length")){
+			// 		dataLength = Integer.parseInt(line.replaceAll(" ","").split(":")[1]);
+			// 	}
+			// 	log.debug("header : {}", line);
+			// 	line = br.readLine();
+			// }
 			byte[] body = Files.readAllBytes(new File("./src/webapp/index.html").toPath());
 
-			if("/product".equals(tokens[1])){
-				body = Files.readAllBytes(new File("./src/webapp" + tokens[1]+".html").toPath());
-			} else if ("/product/regForm".equals(tokens[1])) {
+			if("/product".equals(path)){
+				body = Files.readAllBytes(new File("./src/webapp" + path+".html").toPath());
+			} else if ("/product/regForm".equals(path)) {
 				int requestBodyLength;
 				HashMap<String, String> requestParam = null;
 				if(dataLength > 0) {
-					char[] cubf = getCubf(dataLength, br);
+					httpRequest.getRequestParams(dataLength);
+
 					requestParam = makeRequestParam(cubf);
 					this.products.addItem(requestParam.get("id"), requestParam.get("name"), Integer.parseInt(requestParam.get("price")));
 				}
-			} else if ("/user/login".equals(tokens[1])){
+			} else if ("/user/login".equals(path)){
 				/** TODO response add Header "Set-Cookie" "logined=true"
 				request Cookie logined key value
 				Cookie key jsessionid=*/
-			} else if ("/user/create".equals(tokens[1])){
-				String body = IOUtils.getCubf(br, dataLength);
+			} else if ("/user/create".equals(path)){
+				String bodys = IOUtils.getCubf(br, dataLength);
 			}
+
 
 
 			File index = new File("./src/webapp/index.html");
@@ -93,18 +94,9 @@ public class RequestHandler extends Thread{
 
 	}
 
-//	private char[] getCubf(int dataLength, BufferedReader br) throws IOException {
-//		char[] cubf = null;
-//		cubf = new char[dataLength];
-//		int requestBodyLength = br.read(cubf);
-//		return cubf;
-//	}
-
-
-	private HashMap<String, String> makeRequestParam(char[] cubf){
+	private HashMap<String, String> makeRequestParam(String cubf){
 		HashMap<String, String> request = new HashMap<>();
-		String requestString = new String(cubf);
-		String[] splitedRequestString = requestString.split("&");
+		String[] splitedRequestString = cubf.split("&");
 		Arrays.stream(splitedRequestString).forEach(s -> {
 			String[] bb = s.split("=");
 			request.put(bb[0], bb[1]);
