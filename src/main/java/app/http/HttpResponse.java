@@ -2,6 +2,7 @@ package app.http;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,4 +18,10 @@ public class HttpResponse {
     public void addHeader(String key, String value){
         header.put(key, value);
     }
+
+    public PrintWriter getWriter(){
+
+    }
+
+
 }

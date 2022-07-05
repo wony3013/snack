@@ -1,5 +1,6 @@
 package server;
 
+import app.controller.Controller;
 import app.http.HttpRequest;
 import app.http.HttpResponse;
 import app.util.IOUtils;
@@ -11,6 +12,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 import com.google.common.net.HttpHeaders;
 
@@ -38,6 +40,17 @@ public class RequestHandler extends Thread{
 			HttpResponse httpResponse = new HttpResponse(out);
 
 			String path = httpRequest.getRequestLine().getPath();
+
+			Controller controller = RequestMapping.getController(path);
+			if(Objects.isNull(controller)){
+				String path2 = getDefaultPath(url);
+			} else {
+				controller.service(httpRequest, httpResponse);
+			}
+
+			// TODO Ajax!! 사용자목록을 json으로 리턴하는 기능 /api/users
+
+
 			int dataLength = Integer.parseInt(httpRequest.getHttpHeaders().headers.get("dataLength"));
 
 			// BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -60,6 +73,10 @@ public class RequestHandler extends Thread{
 			// }
 			byte[] body = Files.readAllBytes(new File("./src/webapp/index.html").toPath());
 
+
+
+
+			// TODO if와 else를 제거
 			if("/product".equals(path)){
 				body = Files.readAllBytes(new File("./src/webapp" + path+".html").toPath());
 			} else if ("/product/regForm".equals(path)) {
@@ -78,6 +95,12 @@ public class RequestHandler extends Thread{
 			} else if ("/user/create".equals(path)){
 				String bodys = IOUtils.getCubf(br, dataLength);
 			}
+
+
+
+
+
+
 
 
 

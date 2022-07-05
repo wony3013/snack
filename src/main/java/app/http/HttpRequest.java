@@ -14,30 +14,6 @@ import server.RequestHandler;
 public class HttpRequest {
     private static final Logger log =  LoggerFactory.getLogger(RequestHandler.class);
 
-    public RequestLine getRequestLine() {
-        return requestLine;
-    }
-
-    public void setRequestLine(RequestLine requestLine) {
-        this.requestLine = requestLine;
-    }
-
-    public HttpHeaders getHttpHeaders() {
-        return httpHeaders;
-    }
-
-    public void setHttpHeaders(HttpHeaders httpHeaders) {
-        this.httpHeaders = httpHeaders;
-    }
-
-    public RequestParams getRequestParams() {
-        return requestParams;
-    }
-
-    public void setRequestParams(RequestParams requestParams) {
-        this.requestParams = requestParams;
-    }
-
     RequestLine requestLine;
     HttpHeaders httpHeaders;
     RequestParams requestParams;
