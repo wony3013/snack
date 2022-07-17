@@ -3,17 +3,28 @@ package app.http;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import app.util.HttpRequestUtils;
+
 public class RequestParams {
-	public HashMap<String, String> requestParam;
+	public HashMap<String, String> requestParam = new HashMap<>();
 
-	public RequestParams(String cubf) {
+	public void addQueryString(String queryString){
+		putParams(queryString);
+	}
 
-		String[] splitedRequestString = cubf.split("&");
-		Arrays.stream(splitedRequestString).forEach(s -> {
-			String[] bb = s.split("=");
-			this.requestParam.put(bb[0], bb[1]);
-		});
+	private void putParams(String data){
+		if(data == null || data.isEmpty()){
+			return;
+		}
+		requestParam.putAll(HttpRequestUtils.parseQueryString(data));
+	}
 
+	public void addBody(String body){
+		putParams(body);
+	}
+
+	public String getParameter(String key){
+		return requestParam.get(key);
 	}
 }
 

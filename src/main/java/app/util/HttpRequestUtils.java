@@ -19,7 +19,7 @@ public class HttpRequestUtils {
     }
 
     public static Pair parseHeader(String header){
-        return getKeyvalue(header, ": ");
+        return getKeyValue(header, ": ");
     }
 
     public static Map<String, String> parseValues(String values, String separator){
@@ -29,13 +29,13 @@ public class HttpRequestUtils {
 
         String[] tokens = values.split(separator);
         return Arrays.stream(tokens)
-                .map(s -> getKeyvalue(s, "="))
+                .map(s -> getKeyValue(s, "="))
                 .filter(pair -> pair != null)
                 .collect(Collectors.toMap(pair -> pair.getKey(), pair -> pair.getValue()));
 
     }
 
-    static Pair getKeyvalue(String keyValue, String regex){
+    static Pair getKeyValue(String keyValue, String regex){
         if(Strings.isNullOrEmpty(keyValue)){
             return null;
         }

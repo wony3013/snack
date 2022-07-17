@@ -14,22 +14,55 @@ import server.RequestHandler;
 public class HttpRequest {
     private static final Logger log =  LoggerFactory.getLogger(RequestHandler.class);
 
-    RequestLine requestLine;
-    HttpHeaders httpHeaders;
-    RequestParams requestParams;
+    private RequestLine requestLine;
+    private HttpHeaders httpHeaders;
+    private RequestParams requestParams = new RequestParams();
 
-    public HttpRequest(InputStream is) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String line = br.readLine();
-        log.debug("request line : {}", line);
+    public HttpRequest(InputStream is){
 
-        if(line == null){
-            return;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            requestLine = new RequestLine(createRequestLine(br));
+            requestParams.addQueryString(requestLine.getQueryString());
+            httpHeaders = processHeaders(br);
+            requestParams.addBody(IOUtils.getCubf(br, httpHeaders.getContentLength()));
+        } catch (IOException e){
+            log.error(e.getMessage());
         }
 
-        this.requestLine = new RequestLine(line);
-        this.httpHeaders = new HttpHeaders(br);
-        this.requestParams = new RequestParams(IOUtils.getCubf(br, dataLength))
+    }
+
+    private String createRequestLine(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        if(line == null){
+            throw new IllegalArgumentException();
+        }
+        return line;
+    }
+
+    private HttpHeaders processHeaders(BufferedReader br) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        String line;
+        while (!(line = br.readLine()).equals("")){
+            headers.add(line);
+        }
+        return headers;
+    }
+
+    public HttpMethod getMethod(){
+        return requestLine.getHttpMethod();
+    }
+
+    public String getPath(){
+        return requestLine.getPath();
+    }
+
+    public String getHeader(String key){
+        return httpHeaders.getHeader(key);
+    }
+
+    public String getParameter(String key){
+        return requestParams.getParameter(key);
     }
 
 }

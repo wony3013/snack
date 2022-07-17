@@ -10,10 +10,6 @@ public class urlHandlerTest {
 
     @Test
     public void urlCatchTest(){
-        String testUrl = "/user";
-        UrlHandler urlHandler = new Urlhandler();
-
-        assertEquals(urlHandler.urlCatch(testUrl), "/user");
 
 
 

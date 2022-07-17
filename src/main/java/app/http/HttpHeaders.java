@@ -15,23 +15,24 @@ public class HttpHeaders {
 
     public Map<String, String> headers = new HashMap<>();
 
-	public HttpHeaders(BufferedReader br) throws IOException {
-		String requestLine = br.readLine();
-		while (!"".equals(requestLine)){
-			this.addHeader(requestLine);
-			requestLine = br.readLine();
-		}
+
+	void add(String header){
+		log.debug("header : {}", header);
+		String[] splitHeaders = header.split(":");
+		headers.put(splitHeaders[0], splitHeaders[1].trim());
 	}
 
-	public void addHeader(String requestLine){
-		int dataLength = 0;
-		StringBuffer response = new StringBuffer();
-		response.append(requestLine);
-		if(requestLine.contains(CONTENT_LENGTH)){
-			dataLength = Integer.parseInt(requestLine.replaceAll(" ","").split(":")[1]);
-			this.headers.put("dataLength", String.valueOf(dataLength));
-		}
-		log.debug("header : {}", requestLine);
+	String getHeader(String key){
+		return headers.get(key);
+	}
 
-    }
+	int getIntHeader(String key){
+		String header = getHeader(key);
+		return header == null ? 0 : Integer.parseInt(header);
+	}
+
+	int getContentLength(){
+		return getIntHeader(CONTENT_LENGTH);
+	}
+
 }

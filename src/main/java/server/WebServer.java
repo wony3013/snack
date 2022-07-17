@@ -20,7 +20,7 @@ public class WebServer {
 		}
 
 		try(ServerSocket listenSocket = new ServerSocket(port)){
-			log.info("Web Application Server started {} port",port);
+			log.info("Web Application Server started {} port", port);
 			Socket connection;
 			while ((connection = listenSocket.accept()) != null){
 				RequestHandler requestHandler = new RequestHandler(connection);

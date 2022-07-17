@@ -7,7 +7,7 @@ public class IOUtils {
 
     public static String getCubf(BufferedReader br, int dataLength) throws IOException {
         char[] cubf = new char[dataLength];
-        int requestBodyLength = br.read(cubf);
+        int requestBodyLength = br.read(cubf, 0, dataLength);
         return String.valueOf(cubf);
     }
 }

@@ -1,8 +1,9 @@
-package app;
+package app.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import app.model.Item;
 import app.util.CsvFileHandler;
 
 public class Products {

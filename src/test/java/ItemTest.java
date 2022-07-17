@@ -1,15 +1,23 @@
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import app.Item;
-import app.Products;
+import app.model.Item;
+import app.model.Products;
 
 public class ItemTest {
 
 	Logger logger = LoggerFactory.getLogger(ItemTest.class);
+
+	@Test
+	public void checkItemFormOpen() throws IOException {
+		byte[] body = Files.readAllBytes(new File("./webapp/product.html").toPath());
+		logger.debug(body.length+"");
+	}
 
 	@Test
 	public void getProductsTest(){
