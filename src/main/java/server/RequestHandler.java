@@ -30,6 +30,8 @@ public class RequestHandler extends Thread{
 
 			// TODO if와 else를 제거
 
+
+
 			Controller controller = RequestMapping.getController(httpRequest.getPath());
 			JsonApiController jController = RequestMapping.getApiController(httpRequest.getPath());
 
@@ -44,12 +46,6 @@ public class RequestHandler extends Thread{
 				log.debug("HTTP Controller");
 				controller.service(httpRequest, httpResponse);
 			}
-
-
-
-			/** TODO response add Header "Set-Cookie" "logined=true"
-			request Cookie logined key value
-			Cookie key jsessionid=*/
 
 		}catch (IOException e){
 			log.error(e.getMessage());

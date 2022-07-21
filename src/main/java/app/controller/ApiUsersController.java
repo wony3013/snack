@@ -37,7 +37,7 @@ public class ApiUsersController implements JsonApiController{
             out.println(jsonObject.toJSONString());
             response.forwardBody(jsonObject.toJSONString());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return "aTest";
     }

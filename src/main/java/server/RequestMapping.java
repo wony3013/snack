@@ -7,6 +7,7 @@ import app.controller.ItemFormController;
 import app.controller.JsonApiController;
 import app.controller.LoginController;
 import app.controller.UserListController;
+import app.controller.loginFormController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +22,9 @@ public class RequestMapping {
 
     static {
         controllers.put("/user/create", new CreateUserController());
-        controllers.put("/user/login", new LoginController());
         controllers.put("/user/list", new UserListController());
+        controllers.put("/login", new LoginController());
+        controllers.put("/login/loginform", new loginFormController());
         controllers.put("/item/new", new ItemFormController());
 
     }
