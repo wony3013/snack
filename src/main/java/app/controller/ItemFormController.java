@@ -6,7 +6,7 @@ import app.http.HttpResponse;
 public class ItemFormController extends AbstractController{
 	@Override
 	public void doGet(HttpRequest request, HttpResponse response) {
-		response.forward("/product.html");
+		response.forward("/productForm.html");
 	}
 
 }

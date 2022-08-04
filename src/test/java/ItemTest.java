@@ -15,7 +15,7 @@ public class ItemTest {
 
 	@Test
 	public void checkItemFormOpen() throws IOException {
-		byte[] body = Files.readAllBytes(new File("./webapp/product.html").toPath());
+		byte[] body = Files.readAllBytes(new File("./webapp/productForm.html").toPath());
 		logger.debug(body.length+"");
 	}
 
